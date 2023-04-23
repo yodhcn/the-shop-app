@@ -15,6 +15,12 @@ export default function ProductsNavigator() {
           backgroundColor:
             Platform.OS === "android" ? Colors.primary : undefined,
         },
+        headerTitleStyle: {
+          fontFamily: "open-sans-bold",
+        },
+        headerBackTitleStyle: {
+          fontFamily: "open-sans",
+        },
         headerTintColor: Platform.OS === "android" ? "white" : Colors.primary,
       }}
     >
