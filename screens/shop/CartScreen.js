@@ -13,8 +13,11 @@ export default function CartScreen(props) {
     for (const key in state.cartItems) {
       transformedCartItems.push({ ...state.cartItems[key], productId: key });
     }
-    return transformedCartItems;
+    return transformedCartItems.sort((a, b) =>
+      a.productId > b.productId ? 1 : -1
+    );
   });
+  const removeFromCart = useBoundStore((state) => state.removeFromCart);
 
   return (
     <View style={styles.screen}>
@@ -32,13 +35,15 @@ export default function CartScreen(props) {
         data={cartItems}
         keyExtractor={(item) => item.productId}
         renderItem={(itemData) => {
-          const { quantity, productTitle, sum } = itemData.item;
+          const { productId, quantity, productTitle, sum } = itemData.item;
           return (
             <CartItem
               quantity={quantity}
               title={productTitle}
               amount={sum}
-              onRemove={() => {}}
+              onRemove={() => {
+                removeFromCart(productId);
+              }}
             />
           );
         }}
