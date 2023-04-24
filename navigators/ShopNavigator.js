@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import ProductsOverviewScreen from "../screens/shop/ProductsOverviewScreen";
 import ProductDetailScreen from "../screens/shop/ProductDetailScreen";
+import CartScreen from "../screens/shop/CartScreen";
 import Colors from "../constants/Colors";
 
 const Stack = createStackNavigator();
@@ -35,6 +36,13 @@ export default function ProductsNavigator() {
         options={({ route }) => ({
           title: route.params.prodTitle,
         })}
+      />
+      <Stack.Screen
+        name="Cart"
+        component={CartScreen}
+        options={{
+          title: "Cart",
+        }}
       />
     </Stack.Navigator>
   );
