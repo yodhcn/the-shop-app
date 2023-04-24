@@ -3,6 +3,7 @@ import { View, Text, FlatList, Button, StyleSheet } from "react-native";
 
 import { useBoundStore } from "../../stores/useBoundStore";
 import Colors from "../../constants/Colors";
+import CartItem from "../../components/shop/CartItem";
 
 export default function CartScreen(props) {
   const cartTotalAmount = useBoundStore((state) => state.cartTotalAmount);
@@ -27,9 +28,21 @@ export default function CartScreen(props) {
           disabled={cartItems.length === 0}
         />
       </View>
-      <View>
-        <Text>ORDER ITEMS</Text>
-      </View>
+      <FlatList
+        data={cartItems}
+        keyExtractor={(item) => item.productId}
+        renderItem={(itemData) => {
+          const { quantity, productTitle, sum } = itemData.item;
+          return (
+            <CartItem
+              quantity={quantity}
+              title={productTitle}
+              amount={sum}
+              onRemove={() => {}}
+            />
+          );
+        }}
+      />
     </View>
   );
 }
