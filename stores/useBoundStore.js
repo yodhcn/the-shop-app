@@ -1,12 +1,12 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
-import { createProductSlice } from "./productSlice";
+import { createProductsSlice } from "./productsSlice";
 import { createCartSlice } from "./cartSlice";
 
 export const useBoundStore = create(
   immer((...a) => ({
-    ...createProductSlice(...a),
+    ...createProductsSlice(...a),
     ...createCartSlice(...a),
   }))
 );
