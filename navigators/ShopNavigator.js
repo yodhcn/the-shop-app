@@ -1,49 +1,111 @@
 import { Platform } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { Ionicons } from "@expo/vector-icons";
 
 import ProductsOverviewScreen from "../screens/shop/ProductsOverviewScreen";
 import ProductDetailScreen from "../screens/shop/ProductDetailScreen";
 import CartScreen from "../screens/shop/CartScreen";
+import OrdersScreen from "../screens/shop/OrdersScreen";
 import Colors from "../constants/Colors";
 
-const Stack = createStackNavigator();
+const ProductsStack = createStackNavigator();
+const OrdersStack = createStackNavigator();
 
-export default function ProductsNavigator() {
+const defaultStackNavigatorScreenOptions = {
+  headerStyle: {
+    backgroundColor: Platform.OS === "android" ? Colors.primary : undefined,
+  },
+  headerTitleStyle: {
+    fontFamily: "open-sans-bold",
+  },
+  headerBackTitleStyle: {
+    fontFamily: "open-sans",
+  },
+  headerTintColor: Platform.OS === "android" ? "white" : Colors.primary,
+};
+
+function ProductsNavigator() {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerStyle: {
-          backgroundColor:
-            Platform.OS === "android" ? Colors.primary : undefined,
-        },
-        headerTitleStyle: {
-          fontFamily: "open-sans-bold",
-        },
-        headerBackTitleStyle: {
-          fontFamily: "open-sans",
-        },
-        headerTintColor: Platform.OS === "android" ? "white" : Colors.primary,
-      }}
-    >
-      <Stack.Screen
+    <ProductsStack.Navigator screenOptions={defaultStackNavigatorScreenOptions}>
+      <ProductsStack.Screen
         name="ProductsOverview"
         component={ProductsOverviewScreen}
         options={{ title: "All Products" }}
       />
-      <Stack.Screen
+      <ProductsStack.Screen
         name="ProductDetail"
         component={ProductDetailScreen}
         options={({ route }) => ({
           title: route.params.prodTitle,
         })}
       />
-      <Stack.Screen
+      <ProductsStack.Screen
         name="Cart"
         component={CartScreen}
         options={{
-          title: "Cart",
+          title: "Your Cart",
         }}
       />
-    </Stack.Navigator>
+    </ProductsStack.Navigator>
+  );
+}
+
+function OrdersNavigator() {
+  return (
+    <OrdersStack.Navigator screenOptions={defaultStackNavigatorScreenOptions}>
+      <OrdersStack.Screen
+        name="Orders"
+        component={OrdersScreen}
+        options={{
+          title: "Your Orders",
+        }}
+      />
+    </OrdersStack.Navigator>
+  );
+}
+
+const Drawer = createDrawerNavigator();
+
+export default function ShopNavigator() {
+  return (
+    <Drawer.Navigator
+      screenOptions={{
+        headerShown: false,
+        drawerActiveTintColor: Colors.primary,
+        drawerLabelStyle: {
+          fontFamily: "open-sans-bold",
+        },
+      }}
+    >
+      <Drawer.Screen
+        name="ProductsNavigator"
+        component={ProductsNavigator}
+        options={{
+          drawerLabel: "Products",
+          drawerIcon: ({ color }) => (
+            <Ionicons
+              name={Platform.OS === "android" ? "md-list" : "ios-list"}
+              size={23}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="OrdersNavigator"
+        component={OrdersNavigator}
+        options={{
+          drawerLabel: "Orders",
+          drawerIcon: (color) => (
+            <Ionicons
+              name={Platform.OS === "android" ? "md-create" : "ios-create"}
+              size={23}
+              color={color}
+            />
+          ),
+        }}
+      />
+    </Drawer.Navigator>
   );
 }
