@@ -18,6 +18,7 @@ export default function CartScreen(props) {
     );
   });
   const removeFromCart = useBoundStore((state) => state.removeFromCart);
+  const addOrder = useBoundStore((state) => state.addOrder);
 
   return (
     <View style={styles.screen}>
@@ -29,6 +30,9 @@ export default function CartScreen(props) {
           color={Colors.accent}
           title="Order Now"
           disabled={cartItems.length === 0}
+          onPress={() => {
+            addOrder(cartItems, cartTotalAmount);
+          }}
         />
       </View>
       <FlatList
