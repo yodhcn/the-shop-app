@@ -16,12 +16,19 @@ export default function ProductDetailScreen(props) {
   const product = useBoundStore((state) =>
     state.availableProducts.find((prod) => prod.id === prodId)
   );
+  const addToCart = useBoundStore((state) => state.addToCart);
 
   return (
     <ScrollView>
       <Image style={styles.image} source={{ uri: product.imageUrl }} />
       <View style={styles.actions}>
-        <Button color={Colors.primary} title="Add To Cart" />
+        <Button
+          color={Colors.primary}
+          title="Add To Cart"
+          onPress={() => {
+            addToCart(product);
+          }}
+        />
       </View>
       <Text style={styles.price}>${product.price.toFixed(2)}</Text>
       <Text style={styles.description}>{product.description}</Text>

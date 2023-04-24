@@ -6,12 +6,14 @@ import ProductItem from "../../components/shop/ProductItem";
 
 export default function ProductsOverviewScreen({ navigation }) {
   const products = useBoundStore((state) => state.availableProducts);
+  const addToCart = useBoundStore((state) => state.addToCart);
 
   return (
     <FlatList
       data={products}
       renderItem={(itemData) => {
-        const { id, imageUrl, title, price } = itemData.item;
+        const product = itemData.item;
+        const { id, imageUrl, title, price } = product;
         return (
           <ProductItem
             imageUrl={imageUrl}
@@ -22,6 +24,9 @@ export default function ProductsOverviewScreen({ navigation }) {
                 prodId: id,
                 prodTitle: title,
               });
+            }}
+            onAddToCart={() => {
+              addToCart(product);
             }}
           />
         );
