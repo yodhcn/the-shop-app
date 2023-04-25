@@ -7,10 +7,12 @@ import ProductsOverviewScreen from "../screens/shop/ProductsOverviewScreen";
 import ProductDetailScreen from "../screens/shop/ProductDetailScreen";
 import CartScreen from "../screens/shop/CartScreen";
 import OrdersScreen from "../screens/shop/OrdersScreen";
+import UserProductsScreen from "../screens/user/UserProductsScreen";
 import Colors from "../constants/Colors";
 
 const ProductsStack = createStackNavigator();
 const OrdersStack = createStackNavigator();
+const AdminStack = createStackNavigator();
 
 const defaultStackNavigatorScreenOptions = {
   headerStyle: {
@@ -65,6 +67,20 @@ function OrdersNavigator() {
   );
 }
 
+function AdminNavigator() {
+  return (
+    <AdminStack.Navigator screenOptions={defaultStackNavigatorScreenOptions}>
+      <AdminStack.Screen
+        name="UserProducts"
+        component={UserProductsScreen}
+        options={{
+          title: "Your Products",
+        }}
+      />
+    </AdminStack.Navigator>
+  );
+}
+
 const Drawer = createDrawerNavigator();
 
 export default function ShopNavigator() {
@@ -85,7 +101,7 @@ export default function ShopNavigator() {
           drawerLabel: "Products",
           drawerIcon: ({ color }) => (
             <Ionicons
-              name={Platform.OS === "android" ? "md-list" : "ios-list"}
+              name={Platform.OS === "android" ? "md-cart" : "ios-cart"}
               size={23}
               color={color}
             />
@@ -97,7 +113,21 @@ export default function ShopNavigator() {
         component={OrdersNavigator}
         options={{
           drawerLabel: "Orders",
-          drawerIcon: (color) => (
+          drawerIcon: ({ color }) => (
+            <Ionicons
+              name={Platform.OS === "android" ? "md-list" : "ios-list"}
+              size={23}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="AdminNavigator"
+        component={AdminNavigator}
+        options={{
+          drawerLabel: "Orders",
+          drawerIcon: ({ color }) => (
             <Ionicons
               name={Platform.OS === "android" ? "md-create" : "ios-create"}
               size={23}
