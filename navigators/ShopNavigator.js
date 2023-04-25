@@ -126,7 +126,7 @@ export default function ShopNavigator() {
         name="AdminNavigator"
         component={AdminNavigator}
         options={{
-          drawerLabel: "Orders",
+          drawerLabel: "Admin",
           drawerIcon: ({ color }) => (
             <Ionicons
               name={Platform.OS === "android" ? "md-create" : "ios-create"}
