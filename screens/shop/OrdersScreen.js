@@ -1,9 +1,10 @@
 import { useLayoutEffect } from "react";
-import { View, FlatList, Text, Platform, StyleSheet } from "react-native";
+import { View, FlatList, Platform, StyleSheet } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import { useBoundStore } from "../../stores/useBoundStore";
 import HeaderButton from "../../components/UI/HeaderButton";
+import OrderItem from "../../components/shop/OrderItem";
 
 export default function OrdersScreen({ navigation }) {
   const orders = useBoundStore((state) => state.orders);
@@ -28,10 +29,12 @@ export default function OrdersScreen({ navigation }) {
     <View>
       <FlatList
         data={orders}
-        renderItem={(itemData) => {
-          const order = itemData.item;
-          return <Text>{order.totalAmount}</Text>;
-        }}
+        renderItem={(itemData) => (
+          <OrderItem
+            totalAmount={itemData.item.totalAmount}
+            date={itemData.item.readableDate}
+          />
+        )}
       />
     </View>
   );
