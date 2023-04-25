@@ -1,8 +1,9 @@
 import Order from "../models/order";
+import { createCartSlice } from "./cartSlice";
 
 export const createOrdersSlice = (set) => ({
   orders: [],
-  addOrder: (cartItems, cartTotalAmount) =>
+  addOrder: (cartItems, cartTotalAmount) => {
     set((state) => {
       const newOrder = new Order(
         new Date().toString(),
@@ -11,5 +12,7 @@ export const createOrdersSlice = (set) => ({
         new Date()
       );
       state.orders.push(newOrder);
-    }),
+    });
+    createCartSlice(set).clearCart();
+  },
 });

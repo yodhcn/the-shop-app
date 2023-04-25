@@ -39,4 +39,9 @@ export const createCartSlice = (set) => ({
       }
       state.cartTotalAmount -= productPrice;
     }),
+  clearCart: () =>
+    set((state) => {
+      state.cartItems = {};
+      state.cartTotalAmount = 0;
+    }),
 });
