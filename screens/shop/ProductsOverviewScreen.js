@@ -1,10 +1,11 @@
 import { useLayoutEffect } from "react";
-import { FlatList, Platform } from "react-native";
+import { FlatList, Button, Platform } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import { useBoundStore } from "../../stores/useBoundStore";
 import ProductItem from "../../components/shop/ProductItem";
 import HeaderButton from "../../components/UI/HeaderButton";
+import Colors from "../../constants/Colors";
 
 export default function ProductsOverviewScreen({ navigation }) {
   const products = useBoundStore((state) => state.availableProducts);
@@ -37,6 +38,13 @@ export default function ProductsOverviewScreen({ navigation }) {
     });
   }, [navigation]);
 
+  function onSelectItemHandler(id, title) {
+    navigation.navigate("ProductDetail", {
+      prodId: id,
+      prodTitle: title,
+    });
+  }
+
   return (
     <FlatList
       data={products}
@@ -48,16 +56,25 @@ export default function ProductsOverviewScreen({ navigation }) {
             imageUrl={imageUrl}
             title={title}
             price={price}
-            onViewDetail={() => {
-              navigation.navigate("ProductDetail", {
-                prodId: id,
-                prodTitle: title,
-              });
+            onSelect={() => {
+              onSelectItemHandler(id, title);
             }}
-            onAddToCart={() => {
-              addToCart(product);
-            }}
-          />
+          >
+            <Button
+              color={Colors.primary}
+              title="View Details"
+              onPress={() => {
+                onSelectItemHandler(id, title);
+              }}
+            />
+            <Button
+              color={Colors.primary}
+              title="To Cart"
+              onPress={() => {
+                addToCart(product);
+              }}
+            />
+          </ProductItem>
         );
       }}
     />

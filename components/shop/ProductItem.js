@@ -15,7 +15,7 @@ export default function ProductItem(props) {
     <View style={styles.product}>
       <View style={styles.pressable}>
         <Pressable
-          onPress={props.onViewDetail}
+          onPress={props.onSelect}
           android_ripple={{
             color: Colors.ripple_material_light,
             foreground: true,
@@ -33,18 +33,7 @@ export default function ProductItem(props) {
             <Text style={styles.title}>{props.title}</Text>
             <Text style={styles.price}>${props.price.toFixed(2)}</Text>
           </View>
-          <View style={styles.actions}>
-            <Button
-              color={Colors.primary}
-              title="View Details"
-              onPress={props.onViewDetail}
-            />
-            <Button
-              color={Colors.primary}
-              title="To Cart"
-              onPress={props.onAddToCart}
-            />
-          </View>
+          <View style={styles.actions}>{props.children}</View>
         </Pressable>
       </View>
     </View>

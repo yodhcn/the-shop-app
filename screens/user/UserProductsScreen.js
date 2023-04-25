@@ -1,10 +1,11 @@
 import { useLayoutEffect } from "react";
-import { FlatList } from "react-native";
+import { FlatList, Button } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import { useBoundStore } from "../../stores/useBoundStore";
 import HeaderButton from "../../components/UI/HeaderButton";
 import ProductItem from "../../components/shop/ProductItem";
+import Colors from "../../constants/Colors";
 
 export default function UserProductsScreen({ navigation }) {
   const userProducts = useBoundStore((state) => state.userProducts);
@@ -36,9 +37,11 @@ export default function UserProductsScreen({ navigation }) {
             imageUrl={imageUrl}
             title={title}
             price={price}
-            onViewDetail={() => {}}
-            onAddToCart={() => {}}
-          />
+            onSelect={() => {}}
+          >
+            <Button color={Colors.primary} title="Edit" onPress={() => {}} />
+            <Button color={Colors.primary} title="Delete" onPress={() => {}} />
+          </ProductItem>
         );
       }}
     />
