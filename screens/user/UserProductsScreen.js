@@ -24,8 +24,25 @@ export default function UserProductsScreen({ navigation }) {
           />
         </HeaderButtons>
       ),
+      headerRight: () => (
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            title="Add"
+            iconName={Platform.OS === "android" ? "md-create" : "ios-create"}
+            onPress={() => {
+              navigation.navigate("EditProduct");
+            }}
+          />
+        </HeaderButtons>
+      ),
     });
   }, [navigation]);
+
+  function editProductHandler(id) {
+    navigation.navigate("EditProduct", {
+      prodId: id,
+    });
+  }
 
   return (
     <FlatList
@@ -38,9 +55,17 @@ export default function UserProductsScreen({ navigation }) {
             imageUrl={imageUrl}
             title={title}
             price={price}
-            onSelect={() => {}}
+            onSelect={() => {
+              editProductHandler(id);
+            }}
           >
-            <Button color={Colors.primary} title="Edit" onPress={() => {}} />
+            <Button
+              color={Colors.primary}
+              title="Edit"
+              onPress={() => {
+                editProductHandler(id);
+              }}
+            />
             <Button
               color={Colors.primary}
               title="Delete"
