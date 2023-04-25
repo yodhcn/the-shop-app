@@ -45,6 +45,7 @@ export default function CartScreen(props) {
               quantity={quantity}
               title={productTitle}
               amount={sum}
+              deletable
               onRemove={() => {
                 removeFromCart(productId);
               }}

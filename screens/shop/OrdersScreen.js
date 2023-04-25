@@ -33,6 +33,7 @@ export default function OrdersScreen({ navigation }) {
           <OrderItem
             totalAmount={itemData.item.totalAmount}
             date={itemData.item.readableDate}
+            items={itemData.item.items}
           />
         )}
       />
