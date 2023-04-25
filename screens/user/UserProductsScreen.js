@@ -9,6 +9,7 @@ import Colors from "../../constants/Colors";
 
 export default function UserProductsScreen({ navigation }) {
   const userProducts = useBoundStore((state) => state.userProducts);
+  const deleteProduct = useBoundStore((state) => state.deleteProduct);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -31,7 +32,7 @@ export default function UserProductsScreen({ navigation }) {
       data={userProducts}
       renderItem={(itemData) => {
         const product = itemData.item;
-        const { imageUrl, title, price } = product;
+        const { id, imageUrl, title, price } = product;
         return (
           <ProductItem
             imageUrl={imageUrl}
@@ -40,7 +41,13 @@ export default function UserProductsScreen({ navigation }) {
             onSelect={() => {}}
           >
             <Button color={Colors.primary} title="Edit" onPress={() => {}} />
-            <Button color={Colors.primary} title="Delete" onPress={() => {}} />
+            <Button
+              color={Colors.primary}
+              title="Delete"
+              onPress={() => {
+                deleteProduct(id);
+              }}
+            />
           </ProductItem>
         );
       }}

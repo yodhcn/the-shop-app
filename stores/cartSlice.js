@@ -44,4 +44,12 @@ export const createCartSlice = (set) => ({
       state.cartItems = {};
       state.cartTotalAmount = 0;
     }),
+  deleteCartItem: (productId) =>
+    set((state) => {
+      if (!state.cartItems[productId]) {
+        return;
+      }
+      state.cartTotalAmount -= state.cartItems[productId].sum;
+      delete state.cartItems[productId];
+    }),
 });
