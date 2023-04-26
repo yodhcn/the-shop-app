@@ -6,6 +6,8 @@ import { useBoundStore } from "../../stores/useBoundStore";
 import HeaderButton from "../../components/UI/HeaderButton";
 
 export default function EditProductScreen({ navigation, route }) {
+  console.log("render...");
+
   const prodId = route.params && route.params.prodId;
   const editedProduct = useBoundStore(
     useCallback(
@@ -23,6 +25,10 @@ export default function EditProductScreen({ navigation, route }) {
     editedProduct ? editedProduct.description : ""
   );
 
+  const submitHandler = useCallback(() => {
+    console.log("submitHandler");
+  }, []);
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -32,14 +38,12 @@ export default function EditProductScreen({ navigation, route }) {
             iconName={
               Platform.OS === "android" ? "md-checkmark" : "ios-checkmark"
             }
-            onPress={() => {
-              // navigation.navigate("EditProduct");
-            }}
+            onPress={submitHandler}
           />
         </HeaderButtons>
       ),
     });
-  }, [navigation]);
+  }, [submitHandler]);
 
   return (
     <ScrollView>
