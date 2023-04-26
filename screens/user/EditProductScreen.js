@@ -31,7 +31,8 @@ export default function EditProductScreen({ navigation, route }) {
     } else {
       createProduct(title, description, imageUrl, +price);
     }
-  }, [title, description, imageUrl, price]);
+    navigation.goBack();
+  }, [navigation, title, description, imageUrl, price]);
 
   useLayoutEffect(() => {
     navigation.setOptions({

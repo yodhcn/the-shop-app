@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "react";
-import { FlatList, Button } from "react-native";
+import { FlatList, Button, Alert } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import { useBoundStore } from "../../stores/useBoundStore";
@@ -44,6 +44,19 @@ export default function UserProductsScreen({ navigation }) {
     });
   }
 
+  function deleteHandler(productId) {
+    Alert.alert("Are you sure?", "Do you realy want to delete this item?", [
+      { text: "No", style: "default" },
+      {
+        text: "Yes",
+        style: "destructive",
+        onPress: () => {
+          deleteProduct(productId);
+        },
+      },
+    ]);
+  }
+
   return (
     <FlatList
       data={userProducts}
@@ -70,7 +83,7 @@ export default function UserProductsScreen({ navigation }) {
               color={Colors.primary}
               title="Delete"
               onPress={() => {
-                deleteProduct(id);
+                deleteHandler(id);
               }}
             />
           </ProductItem>
