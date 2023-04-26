@@ -6,8 +6,6 @@ import { useBoundStore } from "../../stores/useBoundStore";
 import HeaderButton from "../../components/UI/HeaderButton";
 
 export default function EditProductScreen({ navigation, route }) {
-  console.log("render...");
-
   const prodId = route.params && route.params.prodId;
   const editedProduct = useBoundStore(
     useCallback(
@@ -15,6 +13,8 @@ export default function EditProductScreen({ navigation, route }) {
       [prodId]
     )
   );
+  const updateProduct = useBoundStore((state) => state.updateProduct);
+  const createProduct = useBoundStore((state) => state.createProduct);
 
   const [title, setTitle] = useState(editedProduct ? editedProduct.title : "");
   const [imageUrl, setImageUrl] = useState(
@@ -26,8 +26,12 @@ export default function EditProductScreen({ navigation, route }) {
   );
 
   const submitHandler = useCallback(() => {
-    console.log("submitHandler");
-  }, []);
+    if (editedProduct) {
+      updateProduct(prodId, title, description, imageUrl);
+    } else {
+      createProduct(title, description, imageUrl, +price);
+    }
+  }, [title, description, imageUrl, price]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
