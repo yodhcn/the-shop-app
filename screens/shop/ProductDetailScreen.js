@@ -1,4 +1,4 @@
-import React from "react";
+import { useCallback } from "react";
 import {
   ScrollView,
   View,
@@ -13,8 +13,11 @@ import Colors from "../../constants/Colors";
 
 export default function ProductDetailScreen(props) {
   const prodId = props.route.params.prodId;
-  const product = useBoundStore((state) =>
-    state.availableProducts.find((prod) => prod.id === prodId)
+  const product = useBoundStore(
+    useCallback(
+      (state) => state.availableProducts.find((prod) => prod.id === prodId),
+      [prodId]
+    )
   );
   const addToCart = useBoundStore((state) => state.addToCart);
 

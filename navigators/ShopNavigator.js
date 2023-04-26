@@ -81,9 +81,12 @@ function AdminNavigator() {
       <AdminStack.Screen
         name="EditProduct"
         component={EditProductScreen}
-        options={{
-          title: "Edit Product",
-        }}
+        options={({ route }) => ({
+          title:
+            route.params && route.params.prodId
+              ? "Edit Product"
+              : "Add Product",
+        })}
       />
     </AdminStack.Navigator>
   );
