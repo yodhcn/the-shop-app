@@ -1,5 +1,12 @@
 import { useLayoutEffect, useState, useCallback } from "react";
-import { View, ScrollView, Text, TextInput, StyleSheet } from "react-native";
+import {
+  View,
+  ScrollView,
+  Text,
+  TextInput,
+  StyleSheet,
+  Alert,
+} from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import { useBoundStore } from "../../stores/useBoundStore";
@@ -17,6 +24,7 @@ export default function EditProductScreen({ navigation, route }) {
   const createProduct = useBoundStore((state) => state.createProduct);
 
   const [title, setTitle] = useState(editedProduct ? editedProduct.title : "");
+  const [titleIsValid, setTitleIsValid] = useState(false);
   const [imageUrl, setImageUrl] = useState(
     editedProduct ? editedProduct.imageUrl : ""
   );
@@ -26,13 +34,18 @@ export default function EditProductScreen({ navigation, route }) {
   );
 
   const submitHandler = useCallback(() => {
+    if (!titleIsValid) {
+      Alert.alert("Wrong Input!", "Please check the errors in the form.");
+      return;
+    }
+
     if (editedProduct) {
       updateProduct(prodId, title, description, imageUrl);
     } else {
       createProduct(title, description, imageUrl, +price);
     }
     navigation.goBack();
-  }, [navigation, title, description, imageUrl, price]);
+  }, [navigation, title, description, imageUrl, price, titleIsValid]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -50,6 +63,15 @@ export default function EditProductScreen({ navigation, route }) {
     });
   }, [submitHandler]);
 
+  function titleChangeHandler(text) {
+    if (text.trim().length === 0) {
+      setTitleIsValid(false);
+    } else {
+      setTitleIsValid(true);
+    }
+    setTitle(text);
+  }
+
   return (
     <ScrollView>
       <View style={styles.form}>
@@ -58,10 +80,10 @@ export default function EditProductScreen({ navigation, route }) {
           <TextInput
             style={styles.input}
             value={title}
-            onChangeText={(text) => {
-              setTitle(text);
-            }}
+            onChangeText={titleChangeHandler}
+            autoCapitalize="sentences"
           />
+          {!titleIsValid && <Text>Please enter a valid title!</Text>}
         </View>
         <View style={styles.formControl}>
           <Text style={styles.label}>Image URL</Text>
@@ -82,6 +104,7 @@ export default function EditProductScreen({ navigation, route }) {
               onChangeText={(text) => {
                 setPrice(text);
               }}
+              keyboardType="decimal-pad"
             />
           </View>
         )}
