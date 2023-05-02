@@ -2,10 +2,9 @@ import { useLayoutEffect, useReducer, useCallback } from "react";
 import {
   View,
   ScrollView,
-  Text,
-  TextInput,
   StyleSheet,
   Alert,
+  KeyboardAvoidingView,
 } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
@@ -108,52 +107,58 @@ export default function EditProductScreen({ navigation, route }) {
   }, [submitHandler]);
 
   return (
-    <ScrollView>
-      <View style={styles.form}>
-        <Input
-          required
-          id="title"
-          lable="Title"
-          errorText="Please enter a valid title!"
-          autoCapitalize="sentences"
-          onInputChange={inputChangeHandler}
-          initialValue={editedProduct ? editedProduct.title : ""}
-          initiallyValid={!!editedProduct}
-        />
-        <Input
-          required
-          id="imageUrl"
-          lable="Image URL"
-          errorText="Please enter a valid imageUrl!"
-          onInputChange={inputChangeHandler}
-          initialValue={editedProduct ? editedProduct.imageUrl : ""}
-          initiallyValid={!!editedProduct}
-        />
-        {!editedProduct && (
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior="padding"
+      keyboardVerticalOffset={100}
+    >
+      <ScrollView>
+        <View style={styles.form}>
           <Input
             required
-            id="price"
-            lable="Price"
-            errorText="Please enter a valid price!"
-            keyboardType="decimal-pad"
+            id="title"
+            lable="Title"
+            errorText="Please enter a valid title!"
+            autoCapitalize="sentences"
             onInputChange={inputChangeHandler}
-            min={0.1}
+            initialValue={editedProduct ? editedProduct.title : ""}
+            initiallyValid={!!editedProduct}
           />
-        )}
-        <Input
-          required
-          id="description"
-          lable="Description"
-          errorText="Please enter a valid description!"
-          autoCapitalize="sentences"
-          multiline
-          numberOfLines={3}
-          onInputChange={inputChangeHandler}
-          initialValue={editedProduct ? editedProduct.description : ""}
-          initiallyValid={!!editedProduct}
-        />
-      </View>
-    </ScrollView>
+          <Input
+            required
+            id="imageUrl"
+            lable="Image URL"
+            errorText="Please enter a valid imageUrl!"
+            onInputChange={inputChangeHandler}
+            initialValue={editedProduct ? editedProduct.imageUrl : ""}
+            initiallyValid={!!editedProduct}
+          />
+          {!editedProduct && (
+            <Input
+              required
+              id="price"
+              lable="Price"
+              errorText="Please enter a valid price!"
+              keyboardType="decimal-pad"
+              onInputChange={inputChangeHandler}
+              min={0.1}
+            />
+          )}
+          <Input
+            required
+            id="description"
+            lable="Description"
+            errorText="Please enter a valid description!"
+            autoCapitalize="sentences"
+            multiline
+            numberOfLines={3}
+            onInputChange={inputChangeHandler}
+            initialValue={editedProduct ? editedProduct.description : ""}
+            initiallyValid={!!editedProduct}
+          />
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
