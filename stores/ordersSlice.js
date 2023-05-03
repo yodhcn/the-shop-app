@@ -28,4 +28,23 @@ export const createOrdersSlice = (set) => ({
     });
     createCartSlice(set).clearCart();
   },
+  fetchOrders: async () => {
+    const response = await axios.get(
+      "https://rn-complete-guide-66dfd-default-rtdb.asia-southeast1.firebasedatabase.app/orders/u1.json"
+    );
+    const resData = response.data;
+
+    // map -> array
+    const loadedOrders = [];
+    for (const key in resData) {
+      const { cartItems, cartTotalAmount, date } = resData[key];
+      loadedOrders.push(
+        new Order(key, cartItems, cartTotalAmount, new Date(date))
+      );
+    }
+
+    set((state) => {
+      state.orders = loadedOrders;
+    });
+  },
 });
