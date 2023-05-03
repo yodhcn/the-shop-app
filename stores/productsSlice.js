@@ -1,6 +1,7 @@
 import { PRODUCTS } from "../data/dummy-data";
 import { createCartSlice } from "./cartSlice";
 import Product from "../models/product";
+import axios from "axios";
 
 export const createProductsSlice = (set) => ({
   availableProducts: PRODUCTS,
@@ -16,10 +17,21 @@ export const createProductsSlice = (set) => ({
     });
     createCartSlice(set).deleteCartItem(productId);
   },
-  createProduct: (title, description, imageUrl, price) =>
+  createProduct: async (title, description, imageUrl, price) => {
+    const response = await axios.post(
+      "https://rn-complete-guide-66dfd-default-rtdb.asia-southeast1.firebasedatabase.app/product.json",
+      {
+        title,
+        description,
+        imageUrl,
+        price,
+      }
+    );
+    const resData = response.data;
+
     set((state) => {
       const newProduct = new Product(
-        new Date().toString(),
+        resData.name,
         "u1",
         title,
         imageUrl,
@@ -28,8 +40,8 @@ export const createProductsSlice = (set) => ({
       );
       state.availableProducts.push(newProduct);
       state.userProducts.push(newProduct);
-    }),
-
+    });
+  },
   updateProduct: (id, title, description, imageUrl) =>
     set((state) => {
       const userProductIndex = state.userProducts.findIndex(
