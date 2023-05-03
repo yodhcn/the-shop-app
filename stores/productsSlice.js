@@ -5,7 +5,11 @@ import axios from "axios";
 export const createProductsSlice = (set) => ({
   availableProducts: [],
   userProducts: [],
-  deleteProduct: (productId) => {
+  deleteProduct: async (productId) => {
+    await axios.delete(
+      `https://rn-complete-guide-66dfd-default-rtdb.asia-southeast1.firebasedatabase.app/products/${productId}.json`
+    );
+
     set((state) => {
       state.availableProducts = state.availableProducts.filter(
         (prod) => prod.id !== productId
@@ -41,7 +45,16 @@ export const createProductsSlice = (set) => ({
       state.userProducts.push(newProduct);
     });
   },
-  updateProduct: (id, title, description, imageUrl) =>
+  updateProduct: async (id, title, description, imageUrl) => {
+    await axios.patch(
+      `https://rn-complete-guide-66dfd-default-rtdb.asia-southeast1.firebasedatabase.app/products/${id}.json`,
+      {
+        title,
+        description,
+        imageUrl,
+      }
+    );
+
     set((state) => {
       const userProductIndex = state.userProducts.findIndex(
         (prod) => prod.id === id
@@ -66,7 +79,8 @@ export const createProductsSlice = (set) => ({
         description,
         state.availableProducts[availableProductIndex].price
       );
-    }),
+    });
+  },
   fetchProducts: async () => {
     const response = await axios.get(
       "https://rn-complete-guide-66dfd-default-rtdb.asia-southeast1.firebasedatabase.app/products.json"
