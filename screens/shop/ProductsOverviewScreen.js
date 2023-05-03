@@ -1,5 +1,13 @@
-import { useLayoutEffect, useEffect } from "react";
-import { FlatList, Button, Platform } from "react-native";
+import { useLayoutEffect, useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  Button,
+  Platform,
+  ActivityIndicator,
+  StyleSheet,
+} from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import { useBoundStore } from "../../stores/useBoundStore";
@@ -8,6 +16,8 @@ import HeaderButton from "../../components/UI/HeaderButton";
 import Colors from "../../constants/Colors";
 
 export default function ProductsOverviewScreen({ navigation }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
   const fetchProducts = useBoundStore((state) => state.fetchProducts);
   const products = useBoundStore((state) => state.availableProducts);
   const addToCart = useBoundStore((state) => state.addToCart);
@@ -39,15 +49,55 @@ export default function ProductsOverviewScreen({ navigation }) {
     });
   }, [navigation]);
 
+  const loadProducts = async () => {
+    setError(null);
+    setIsLoading(true);
+    try {
+      await fetchProducts();
+    } catch (error) {
+      setError(error);
+    }
+    setIsLoading(false);
+  };
+
   useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+    loadProducts();
+  }, []);
 
   function onSelectItemHandler(id, title) {
     navigation.navigate("ProductDetail", {
       prodId: id,
       prodTitle: title,
     });
+  }
+
+  if (error) {
+    return (
+      <View style={styles.centered}>
+        <Text>{error.message}</Text>
+        <Button
+          title="Try again"
+          color={Colors.primary}
+          onPress={loadProducts}
+        />
+      </View>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
+
+  if (!isLoading && products.length === 0) {
+    return (
+      <View style={styles.centered}>
+        <Text>No products found. Mabye start adding some!</Text>
+      </View>
+    );
   }
 
   return (
@@ -85,3 +135,11 @@ export default function ProductsOverviewScreen({ navigation }) {
     />
   );
 }
+
+const styles = StyleSheet.create({
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
