@@ -18,7 +18,7 @@ export const createProductsSlice = (set) => ({
   },
   createProduct: async (title, description, imageUrl, price) => {
     const response = await axios.post(
-      "https://rn-complete-guide-66dfd-default-rtdb.asia-southeast1.firebasedatabase.app/product.json",
+      "https://rn-complete-guide-66dfd-default-rtdb.asia-southeast1.firebasedatabase.app/products.json",
       {
         title,
         description,
@@ -69,7 +69,7 @@ export const createProductsSlice = (set) => ({
     }),
   fetchProducts: async () => {
     const response = await axios.get(
-      "https://rn-complete-guide-66dfd-default-rtdb.asia-southeast1.firebasedatabase.app/product.json"
+      "https://rn-complete-guide-66dfd-default-rtdb.asia-southeast1.firebasedatabase.app/products.json"
     );
     const resData = response.data;
 
