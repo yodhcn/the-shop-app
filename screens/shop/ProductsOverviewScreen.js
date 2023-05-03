@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useEffect } from "react";
 import { FlatList, Button, Platform } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
@@ -8,6 +8,7 @@ import HeaderButton from "../../components/UI/HeaderButton";
 import Colors from "../../constants/Colors";
 
 export default function ProductsOverviewScreen({ navigation }) {
+  const fetchProducts = useBoundStore((state) => state.fetchProducts);
   const products = useBoundStore((state) => state.availableProducts);
   const addToCart = useBoundStore((state) => state.addToCart);
 
@@ -37,6 +38,10 @@ export default function ProductsOverviewScreen({ navigation }) {
       ),
     });
   }, [navigation]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   function onSelectItemHandler(id, title) {
     navigation.navigate("ProductDetail", {

@@ -1,11 +1,10 @@
-import { PRODUCTS } from "../data/dummy-data";
 import { createCartSlice } from "./cartSlice";
 import Product from "../models/product";
 import axios from "axios";
 
 export const createProductsSlice = (set) => ({
-  availableProducts: PRODUCTS,
-  userProducts: PRODUCTS.filter((prod) => prod.ownerId === "u1"),
+  availableProducts: [],
+  userProducts: [],
   deleteProduct: (productId) => {
     set((state) => {
       state.availableProducts = state.availableProducts.filter(
@@ -68,4 +67,26 @@ export const createProductsSlice = (set) => ({
         state.availableProducts[availableProductIndex].price
       );
     }),
+  fetchProducts: async () => {
+    const response = await axios.get(
+      "https://rn-complete-guide-66dfd-default-rtdb.asia-southeast1.firebasedatabase.app/product.json"
+    );
+    const resData = response.data;
+
+    // map -> array
+    const loadedProducts = [];
+    for (const key in resData) {
+      const { title, imageUrl, description, price } = resData[key];
+      loadedProducts.push(
+        new Product(key, "u1", title, imageUrl, description, price)
+      );
+    }
+
+    set((state) => {
+      state.availableProducts = loadedProducts;
+      state.userProducts = loadedProducts.filter(
+        (prod) => prod.ownerId === "u1"
+      );
+    });
+  },
 });
