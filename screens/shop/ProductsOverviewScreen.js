@@ -18,6 +18,8 @@ import Colors from "../../constants/Colors";
 
 export default function ProductsOverviewScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
   const [error, setError] = useState();
   const fetchProducts = useBoundStore((state) => state.fetchProducts);
   const products = useBoundStore((state) => state.availableProducts);
@@ -50,22 +52,23 @@ export default function ProductsOverviewScreen({ navigation }) {
     });
   }, [navigation]);
 
-  const loadProducts = useCallback(() => {
-    const loadProductsAsync = async () => {
-      setError(null);
-      setIsLoading(true);
-      try {
-        await fetchProducts();
-      } catch (error) {
-        setError(error);
-      }
-      setIsLoading(false);
-    };
-
-    loadProductsAsync();
+  const loadProducts = useCallback(async () => {
+    setError(null);
+    setIsRefreshing(true);
+    try {
+      await fetchProducts();
+    } catch (error) {
+      setError(error);
+    }
+    setIsRefreshing(false);
   }, []);
 
-  useFocusEffect(loadProducts);
+  useFocusEffect(
+    useCallback(() => {
+      setIsLoading(true);
+      loadProducts().then(setIsLoading(false));
+    }, [])
+  );
 
   function onSelectItemHandler(id, title) {
     navigation.navigate("ProductDetail", {
@@ -105,6 +108,8 @@ export default function ProductsOverviewScreen({ navigation }) {
 
   return (
     <FlatList
+      onRefresh={loadProducts}
+      refreshing={isRefreshing}
       data={products}
       renderItem={(itemData) => {
         const product = itemData.item;
