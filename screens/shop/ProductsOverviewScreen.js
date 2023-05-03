@@ -1,4 +1,5 @@
-import { useLayoutEffect, useEffect, useState } from "react";
+import { useLayoutEffect, useCallback, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import {
   View,
   Text,
@@ -49,20 +50,22 @@ export default function ProductsOverviewScreen({ navigation }) {
     });
   }, [navigation]);
 
-  const loadProducts = async () => {
-    setError(null);
-    setIsLoading(true);
-    try {
-      await fetchProducts();
-    } catch (error) {
-      setError(error);
-    }
-    setIsLoading(false);
-  };
+  const loadProducts = useCallback(() => {
+    const loadProductsAsync = async () => {
+      setError(null);
+      setIsLoading(true);
+      try {
+        await fetchProducts();
+      } catch (error) {
+        setError(error);
+      }
+      setIsLoading(false);
+    };
 
-  useEffect(() => {
-    loadProducts();
+    loadProductsAsync();
   }, []);
+
+  useFocusEffect(loadProducts);
 
   function onSelectItemHandler(id, title) {
     navigation.navigate("ProductDetail", {
