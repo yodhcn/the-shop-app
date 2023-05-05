@@ -9,11 +9,13 @@ import CartScreen from "../screens/shop/CartScreen";
 import OrdersScreen from "../screens/shop/OrdersScreen";
 import UserProductsScreen from "../screens/user/UserProductsScreen";
 import EditProductScreen from "../screens/user/EditProductScreen";
+import AuthScreen from "../screens/user/AuthScreen";
 import Colors from "../constants/Colors";
 
 const ProductsStack = createStackNavigator();
 const OrdersStack = createStackNavigator();
 const AdminStack = createStackNavigator();
+const AuthStack = createStackNavigator();
 
 const defaultStackNavigatorScreenOptions = {
   headerStyle: {
@@ -92,9 +94,17 @@ function AdminNavigator() {
   );
 }
 
+function AuthNavigator() {
+  return (
+    <AuthStack.Navigator screenOptions={defaultStackNavigatorScreenOptions}>
+      <AuthStack.Screen name="Authenticate" component={AuthScreen} />
+    </AuthStack.Navigator>
+  );
+}
+
 const Drawer = createDrawerNavigator();
 
-export default function ShopNavigator() {
+function ShopNavigator() {
   return (
     <Drawer.Navigator
       screenOptions={{
@@ -149,4 +159,8 @@ export default function ShopNavigator() {
       />
     </Drawer.Navigator>
   );
+}
+
+export default function MainNavigator(props) {
+  return props.userToken ? <ShopNavigator /> : <AuthNavigator />;
 }
