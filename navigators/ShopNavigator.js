@@ -1,7 +1,9 @@
-import { Platform } from "react-native";
+import { useEffect, useState } from "react";
+import { View, ActivityIndicator, Platform } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import ProductsOverviewScreen from "../screens/shop/ProductsOverviewScreen";
 import ProductDetailScreen from "../screens/shop/ProductDetailScreen";
@@ -163,6 +165,46 @@ function ShopNavigator() {
 }
 
 export default function MainNavigator() {
+  const [isLoading, setIsLoading] = useState(true);
+
   const token = useBoundStore((state) => state.token);
+  const authenticate = useBoundStore((state) => state.authenticate);
+
+  useEffect(() => {
+    const tryLogin = async () => {
+      const userData = await AsyncStorage.getItem("userData");
+      if (!userData) {
+        return;
+      }
+
+      const transformedData = JSON.parse(userData);
+      const { token, userId, expiryDate } = transformedData;
+      const expirationDate = new Date(expiryDate);
+
+      if (expirationDate <= new Date() || !token || !userId) {
+        return;
+      }
+      authenticate(userId, token);
+    };
+
+    tryLogin().then(() => {
+      setIsLoading(false);
+    });
+  }, []);
+
+  if (isLoading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
+
   return token === null ? <AuthNavigator /> : <ShopNavigator />;
 }
