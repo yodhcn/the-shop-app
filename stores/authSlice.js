@@ -7,13 +7,26 @@ export const createAuthSlice = (set) => ({
     const url =
       "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBm5ZgfgXi0y0c5DuFnSAgZdkfzn22VV10";
     console.log("signup");
-    const response = await axios.post(url, {
-      email,
-      password,
-      returnSecureToken: true,
-    });
-    const resData = response.data;
-    console.log(resData);
+    try {
+      const response = await axios.post(url, {
+        email,
+        password,
+        returnSecureToken: true,
+      });
+      const resData = response.data;
+      console.log(resData);
+    } catch (error) {
+      const resData = error.response.data;
+      console.log(resData);
+      const errorId = resData.error.message;
+      let meaasge = "Something went wrong!";
+      // hhttps://firebase.google.com/docs/reference/rest/auth#section-create-email-password
+      // Common error codes
+      if (errorId === "EMAIL_EXISTS") {
+        meaasge = "This email exists already!";
+      }
+      throw new Error(meaasge);
+    }
   },
   login: async (email, password) => {
     // https://console.firebase.google.com/u/0/project/rn-complete-guide-66dfd/authentication/users
@@ -21,12 +34,27 @@ export const createAuthSlice = (set) => ({
     const url =
       "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBm5ZgfgXi0y0c5DuFnSAgZdkfzn22VV10";
     console.log("login");
-    const response = await axios.post(url, {
-      email,
-      password,
-      returnSecureToken: true,
-    });
-    const resData = response.data;
-    console.log(resData);
+    try {
+      const response = await axios.post(url, {
+        email,
+        password,
+        returnSecureToken: true,
+      });
+      const resData = response.data;
+      console.log(resData);
+    } catch (error) {
+      const resData = error.response.data;
+      console.log(resData);
+      const errorId = resData.error.message;
+      let meaasge = "Something went wrong!";
+      // https://firebase.google.com/docs/reference/rest/auth#section-sign-in-email-password
+      // Common error codes
+      if (errorId === "EMAIL_NOT_FOUND") {
+        meaasge = "This email could not be found!";
+      } else if (errorId === "INVALID_PASSWORD") {
+        meaasge = "This password is not be valid!";
+      }
+      throw new Error(meaasge);
+    }
   },
 });

@@ -1,10 +1,12 @@
-import { useReducer, useCallback, useState } from "react";
+import { useReducer, useCallback, useState, useEffect } from "react";
 import {
   KeyboardAvoidingView,
   ScrollView,
   View,
   Button,
   StyleSheet,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -38,6 +40,8 @@ const formReducer = (state, action) => {
 };
 
 export default function AuthScreen() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
   const [isSignup, setIsSignup] = useState(false);
 
   const signup = useBoundStore((state) => state.signup);
@@ -67,12 +71,32 @@ export default function AuthScreen() {
     [dispatchFormState]
   );
 
-  const authHandler = () => {
-    if (isSignup) {
-      signup(formState.inputValues.email, formState.inputValues.password);
-    } else {
-      login(formState.inputValues.email, formState.inputValues.password);
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An error occurred!", error.message);
     }
+  }, [error]);
+
+  const authHandler = async () => {
+    setError(null);
+    setIsLoading(true);
+    try {
+      if (isSignup) {
+        await signup(
+          formState.inputValues.email,
+          formState.inputValues.password
+        );
+      } else {
+        await login(
+          formState.inputValues.email,
+          formState.inputValues.password
+        );
+      }
+    } catch (error) {
+      setError(error);
+    }
+
+    setIsLoading(false);
   };
 
   return (
@@ -108,11 +132,15 @@ export default function AuthScreen() {
               initialValue=""
             />
             <View style={styles.buttonContainer}>
-              <Button
-                title={isSignup ? "Sign Up" : "Login"}
-                color={Colors.primary}
-                onPress={authHandler}
-              />
+              {isLoading ? (
+                <ActivityIndicator />
+              ) : (
+                <Button
+                  title={isSignup ? "Sign Up" : "Login"}
+                  color={Colors.primary}
+                  onPress={authHandler}
+                />
+              )}
               <Button
                 title={`Switch to ${isSignup ? "Login" : "Sign Up"}`}
                 color={Colors.accent}
