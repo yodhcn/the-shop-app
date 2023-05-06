@@ -14,6 +14,7 @@ import EditProductScreen from "../screens/user/EditProductScreen";
 import AuthScreen from "../screens/user/AuthScreen";
 import Colors from "../constants/Colors";
 import { useBoundStore } from "../stores/useBoundStore";
+import CustomDrawerContent from "../components/UI/CustomDrawerContent";
 
 const ProductsStack = createStackNavigator();
 const OrdersStack = createStackNavigator();
@@ -110,6 +111,7 @@ const Drawer = createDrawerNavigator();
 function ShopNavigator() {
   return (
     <Drawer.Navigator
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         headerShown: false,
         drawerActiveTintColor: Colors.primary,

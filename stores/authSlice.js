@@ -52,7 +52,9 @@ export const createAuthSlice = (set) => ({
         returnSecureToken: true,
       });
     } catch (error) {
+      console.log(`login error: ${error}`);
       const resData = error.response.data;
+      console.log(`login error resData: ${resData}`);
       const errorId = resData.error.message;
       let meaasge = "Something went wrong!";
       // https://firebase.google.com/docs/reference/rest/auth#section-sign-in-email-password
@@ -81,10 +83,15 @@ export const createAuthSlice = (set) => ({
       state.token = token;
     });
   },
+  logout: () => {
+    set((state) => {
+      state.userId = null;
+      state.token = null;
+    });
+  },
 });
 
 const saveDataToStorage = (token, userId, expirationDate) => {
-  console.log(token, userId, expirationDate);
   AsyncStorage.setItem(
     "userData",
     JSON.stringify({
