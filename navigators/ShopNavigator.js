@@ -186,7 +186,8 @@ export default function MainNavigator() {
       if (expirationDate <= new Date() || !token || !userId) {
         return;
       }
-      authenticate(userId, token);
+      const expirationTime = expirationDate.getTime() - new Date().getTime();
+      authenticate(userId, token, expirationTime);
     };
 
     tryLogin().then(() => {

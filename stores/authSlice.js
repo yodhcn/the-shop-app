@@ -1,6 +1,8 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+let logoutTimer = null;
+
 export const createAuthSlice = (set) => ({
   token: null,
   userId: null,
@@ -29,7 +31,11 @@ export const createAuthSlice = (set) => ({
       throw new Error(meaasge);
     }
     const resData = response.data;
-    createAuthSlice(set).authenticate(resData.localId, resData.idToken);
+    createAuthSlice(set).authenticate(
+      resData.localId,
+      resData.idToken,
+      parseInt(resData.expiresIn) * 1000
+    );
     // set((state) => {
     //   state.token = resData.idToken;
     //   state.userId = resData.localId;
@@ -67,7 +73,11 @@ export const createAuthSlice = (set) => ({
       throw new Error(meaasge);
     }
     const resData = response.data;
-    createAuthSlice(set).authenticate(resData.localId, resData.idToken);
+    createAuthSlice(set).authenticate(
+      resData.localId,
+      resData.idToken,
+      parseInt(resData.expiresIn) * 1000
+    );
     // set((state) => {
     //   state.token = resData.idToken;
     //   state.userId = resData.localId;
@@ -77,17 +87,30 @@ export const createAuthSlice = (set) => ({
     );
     saveDataToStorage(resData.idToken, resData.localId, expirationDate);
   },
-  authenticate: (userId, token) => {
+  authenticate: (userId, token, expiryTime) => {
+    createAuthSlice(set).setLogoutTimer(expiryTime);
     set((state) => {
       state.userId = userId;
       state.token = token;
     });
   },
   logout: () => {
+    createAuthSlice(set).clearLogoutTimer();
+    AsyncStorage.removeItem("userData");
     set((state) => {
       state.userId = null;
       state.token = null;
     });
+  },
+  clearLogoutTimer: () => {
+    if (logoutTimer) {
+      clearTimeout(logoutTimer);
+    }
+  },
+  setLogoutTimer: (expirationTime) => {
+    logoutTimer = setTimeout(() => {
+      createAuthSlice(set).logout();
+    }, expirationTime / 500);
   },
 });
 
