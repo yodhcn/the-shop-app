@@ -1,4 +1,4 @@
-import { useReducer, useCallback } from "react";
+import { useReducer, useCallback, useState } from "react";
 import {
   KeyboardAvoidingView,
   ScrollView,
@@ -38,7 +38,10 @@ const formReducer = (state, action) => {
 };
 
 export default function AuthScreen() {
+  const [isSignup, setIsSignup] = useState(false);
+
   const signup = useBoundStore((state) => state.signup);
+  const login = useBoundStore((state) => state.login);
 
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
@@ -64,8 +67,12 @@ export default function AuthScreen() {
     [dispatchFormState]
   );
 
-  const signupHandler = () => {
-    signup(formState.inputValues.email, formState.inputValues.password);
+  const authHandler = () => {
+    if (isSignup) {
+      signup(formState.inputValues.email, formState.inputValues.password);
+    } else {
+      login(formState.inputValues.email, formState.inputValues.password);
+    }
   };
 
   return (
@@ -101,11 +108,17 @@ export default function AuthScreen() {
               initialValue=""
             />
             <View style={styles.buttonContainer}>
-              <Button title="Login" color={Colors.primary} onPress={() => {}} />
               <Button
-                title="Switch to Sign Up"
+                title={isSignup ? "Sign Up" : "Login"}
+                color={Colors.primary}
+                onPress={authHandler}
+              />
+              <Button
+                title={`Switch to ${isSignup ? "Login" : "Sign Up"}`}
                 color={Colors.accent}
-                onPress={signupHandler}
+                onPress={() => {
+                  setIsSignup((prevState) => !prevState);
+                }}
               />
             </View>
           </ScrollView>
