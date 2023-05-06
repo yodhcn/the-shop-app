@@ -93,10 +93,10 @@ export default function AuthScreen() {
         );
       }
     } catch (error) {
+      console.log(error);
       setError(error);
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   return (

@@ -2,12 +2,13 @@ import { createCartSlice } from "./cartSlice";
 import Product from "../models/product";
 import axios from "axios";
 
-export const createProductsSlice = (set) => ({
+export const createProductsSlice = (set, get) => ({
   availableProducts: [],
   userProducts: [],
   deleteProduct: async (productId) => {
+    const token = get().token;
     await axios.delete(
-      `https://rn-complete-guide-66dfd-default-rtdb.asia-southeast1.firebasedatabase.app/products/${productId}.json`
+      `https://rn-complete-guide-66dfd-default-rtdb.asia-southeast1.firebasedatabase.app/products/${productId}.json?auth=${token}`
     );
 
     set((state) => {
@@ -21,8 +22,9 @@ export const createProductsSlice = (set) => ({
     createCartSlice(set).deleteCartItem(productId);
   },
   createProduct: async (title, description, imageUrl, price) => {
+    const token = get().token;
     const response = await axios.post(
-      "https://rn-complete-guide-66dfd-default-rtdb.asia-southeast1.firebasedatabase.app/products.json",
+      `https://rn-complete-guide-66dfd-default-rtdb.asia-southeast1.firebasedatabase.app/products.json?auth=${token}`,
       {
         title,
         description,
@@ -46,8 +48,10 @@ export const createProductsSlice = (set) => ({
     });
   },
   updateProduct: async (id, title, description, imageUrl) => {
+    const token = get().token;
+    // https://firebase.google.com/docs/database/rest/auth#authenticate_with_an_id_token
     await axios.patch(
-      `https://rn-complete-guide-66dfd-default-rtdb.asia-southeast1.firebasedatabase.app/products/${id}.json`,
+      `https://rn-complete-guide-66dfd-default-rtdb.asia-southeast1.firebasedatabase.app/products/${id}.json?auth=${token}`,
       {
         title,
         description,

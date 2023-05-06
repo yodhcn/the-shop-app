@@ -11,6 +11,7 @@ import UserProductsScreen from "../screens/user/UserProductsScreen";
 import EditProductScreen from "../screens/user/EditProductScreen";
 import AuthScreen from "../screens/user/AuthScreen";
 import Colors from "../constants/Colors";
+import { useBoundStore } from "../stores/useBoundStore";
 
 const ProductsStack = createStackNavigator();
 const OrdersStack = createStackNavigator();
@@ -161,6 +162,7 @@ function ShopNavigator() {
   );
 }
 
-export default function MainNavigator(props) {
-  return props.userToken ? <ShopNavigator /> : <AuthNavigator />;
+export default function MainNavigator() {
+  const token = useBoundStore((state) => state.token);
+  return token === null ? <AuthNavigator /> : <ShopNavigator />;
 }

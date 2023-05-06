@@ -3,12 +3,13 @@ import axios from "axios";
 import Order from "../models/order";
 import { createCartSlice } from "./cartSlice";
 
-export const createOrdersSlice = (set) => ({
+export const createOrdersSlice = (set, get) => ({
   orders: [],
   addOrder: async (cartItems, cartTotalAmount) => {
+    const token = get().token;
     const date = new Date();
     const response = await axios.post(
-      "https://rn-complete-guide-66dfd-default-rtdb.asia-southeast1.firebasedatabase.app/orders/u1.json",
+      `https://rn-complete-guide-66dfd-default-rtdb.asia-southeast1.firebasedatabase.app/orders/u1.json?auth=${token}`,
       {
         cartItems,
         cartTotalAmount,
