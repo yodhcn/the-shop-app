@@ -7,9 +7,10 @@ export const createOrdersSlice = (set, get) => ({
   orders: [],
   addOrder: async (cartItems, cartTotalAmount) => {
     const token = get().token;
+    const userId = get().userId;
     const date = new Date();
     const response = await axios.post(
-      `https://rn-complete-guide-66dfd-default-rtdb.asia-southeast1.firebasedatabase.app/orders/u1.json?auth=${token}`,
+      `https://rn-complete-guide-66dfd-default-rtdb.asia-southeast1.firebasedatabase.app/orders/${userId}.json?auth=${token}`,
       {
         cartItems,
         cartTotalAmount,
@@ -30,8 +31,9 @@ export const createOrdersSlice = (set, get) => ({
     createCartSlice(set).clearCart();
   },
   fetchOrders: async () => {
+    const userId = get().userId;
     const response = await axios.get(
-      "https://rn-complete-guide-66dfd-default-rtdb.asia-southeast1.firebasedatabase.app/orders/u1.json"
+      `https://rn-complete-guide-66dfd-default-rtdb.asia-southeast1.firebasedatabase.app/orders/${userId}.json`
     );
     const resData = response.data;
 

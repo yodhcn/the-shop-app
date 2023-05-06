@@ -47,6 +47,7 @@ export const createAuthSlice = (set) => ({
         returnSecureToken: true,
       });
     } catch (error) {
+      console.log(error);
       const resData = error.response.data;
       console.log(resData);
       const errorId = resData.error.message;

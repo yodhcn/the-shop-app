@@ -2,6 +2,7 @@ import { useState, useCallback, useLayoutEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import {
   View,
+  Text,
   FlatList,
   Platform,
   StyleSheet,
@@ -53,6 +54,14 @@ export default function OrdersScreen({ navigation }) {
     return (
       <View style={styles.centered}>
         <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
+
+  if (!isLoading && orders.length === 0) {
+    return (
+      <View style={styles.centered}>
+        <Text>No order found. Mabye start ordering some products?</Text>
       </View>
     );
   }

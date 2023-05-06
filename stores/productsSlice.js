@@ -23,6 +23,7 @@ export const createProductsSlice = (set, get) => ({
   },
   createProduct: async (title, description, imageUrl, price) => {
     const token = get().token;
+    const userId = get().userId;
     const response = await axios.post(
       `https://rn-complete-guide-66dfd-default-rtdb.asia-southeast1.firebasedatabase.app/products.json?auth=${token}`,
       {
@@ -30,6 +31,7 @@ export const createProductsSlice = (set, get) => ({
         description,
         imageUrl,
         price,
+        ownerId: userId,
       }
     );
     const resData = response.data;
@@ -37,7 +39,7 @@ export const createProductsSlice = (set, get) => ({
     set((state) => {
       const newProduct = new Product(
         resData.name,
-        "u1",
+        userId,
         title,
         imageUrl,
         description,
@@ -86,6 +88,7 @@ export const createProductsSlice = (set, get) => ({
     });
   },
   fetchProducts: async () => {
+    const userId = get().userId;
     const response = await axios.get(
       "https://rn-complete-guide-66dfd-default-rtdb.asia-southeast1.firebasedatabase.app/products.json"
     );
@@ -94,16 +97,16 @@ export const createProductsSlice = (set, get) => ({
     // map -> array
     const loadedProducts = [];
     for (const key in resData) {
-      const { title, imageUrl, description, price } = resData[key];
+      const { ownerId, title, imageUrl, description, price } = resData[key];
       loadedProducts.push(
-        new Product(key, "u1", title, imageUrl, description, price)
+        new Product(key, ownerId, title, imageUrl, description, price)
       );
     }
 
     set((state) => {
       state.availableProducts = loadedProducts;
       state.userProducts = loadedProducts.filter(
-        (prod) => prod.ownerId === "u1"
+        (prod) => prod.ownerId === userId
       );
     });
   },
