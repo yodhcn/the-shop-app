@@ -52,6 +52,7 @@ export const createAuthSlice = (set) => ({
       "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBm5ZgfgXi0y0c5DuFnSAgZdkfzn22VV10";
     let response;
     try {
+      console.log(`login... email=${email} password=${password}`);
       response = await axios.post(url, {
         email,
         password,
@@ -60,7 +61,9 @@ export const createAuthSlice = (set) => ({
     } catch (error) {
       console.log(`login error: ${error}`);
       const resData = error.response.data;
-      console.log(`login error resData: ${resData}`);
+      console.log(
+        `login error resData.error.message: ${resData.error.message}`
+      );
       const errorId = resData.error.message;
       let meaasge = "Something went wrong!";
       // https://firebase.google.com/docs/reference/rest/auth#section-sign-in-email-password
