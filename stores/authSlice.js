@@ -4,6 +4,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 let logoutTimer = null;
 
 export const createAuthSlice = (set) => ({
+  isAuth: false,
+  didTryAutoLogin: false,
   token: null,
   userId: null,
   isloggedin: false,
@@ -95,6 +97,7 @@ export const createAuthSlice = (set) => ({
     set((state) => {
       state.userId = userId;
       state.token = token;
+      state.isAuth = true;
     });
   },
   logout: () => {
@@ -114,6 +117,12 @@ export const createAuthSlice = (set) => ({
     logoutTimer = setTimeout(() => {
       createAuthSlice(set).logout();
     }, expirationTime / 500);
+  },
+  setDidTryAL: () => {
+    // AL = AutoLogin
+    set((state) => {
+      state.didTryAutoLogin = true;
+    });
   },
 });
 
